@@ -2,6 +2,7 @@ import torch
 import numpy as np
 from lib.utils.misc import NestedTensor
 import matplotlib.pyplot as plt
+plt.switch_backend('agg')
 import os
 
 class Preprocessor(object):
