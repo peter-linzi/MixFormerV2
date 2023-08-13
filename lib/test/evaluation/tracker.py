@@ -184,8 +184,11 @@ class Tracker:
         ", videofilepath must be a valid videofile"
 
         output_boxes = []
+        output_logits = []
+
         cap = cv.VideoCapture(videofilepath)
         success, frame = cap.read()
+        frame_size = (frame.shape[1], frame.shape[0])
         display_name = 'Display: ' + tracker.params.tracker_name
         if show_results:
             cv.namedWindow(display_name, cv.WINDOW_NORMAL | cv.WINDOW_KEEPRATIO)
@@ -203,6 +206,7 @@ class Tracker:
             assert len(optional_box) == 4, "valid box's foramt is [x,y,w,h]"
             tracker.initialize(frame, _build_init_info(optional_box))
             output_boxes.append(optional_box)
+            output_logits.append(1.0)
         else:
             # raise NotImplementedError("We haven't support cv_show now.")
             while True:
@@ -216,6 +220,7 @@ class Tracker:
                 init_state = [x, y, w, h]
                 tracker.initialize(frame, _build_init_info(init_state))
                 output_boxes.append(init_state)
+                output_logits.append(1.0)
                 break
 
         while True:
@@ -230,9 +235,12 @@ class Tracker:
             out = tracker.track(frame)
             state = [int(s) for s in out['target_bbox']]
             output_boxes.append(state)
+            output_logits.append(out['conf_score'])
 
             cv.rectangle(frame_disp, (state[0], state[1]), (state[2] + state[0], state[3] + state[1]),
-                         (0, 255, 0), 5)
+                         (0, 255, 0), 2)
+            [x, y, w, h] = state
+            cv.putText(frame_disp, "{:.1f}".format(out['conf_score']), (int(x+w/2-10), y-10), cv.FONT_HERSHEY_SIMPLEX ,1,(0,0,255), 2)
 
             font_color = (0, 0, 0)
             cv.putText(frame_disp, 'Tracking!', (20, 30), cv.FONT_HERSHEY_COMPLEX_SMALL, 1,
@@ -260,6 +268,7 @@ class Tracker:
                 init_state = [x, y, w, h]
                 tracker.initialize(frame, _build_init_info(init_state))
                 output_boxes.append(init_state)
+                output_logits.append(1.0)
 
         # When everything done, release the capture
         cap.release()
@@ -271,7 +280,20 @@ class Tracker:
                 os.makedirs(self.results_dir)
             video_name = Path(videofilepath).stem
             base_results_path = os.path.join(self.results_dir, 'video_{}'.format(video_name))
-
+            # save video
+            cap = cv.VideoCapture(videofilepath)
+            video_save_file = base_results_path + '.avi'
+            video_writer = cv.VideoWriter(video_save_file, cv.VideoWriter_fourcc('m', 'p', '4', 'v'), 30, frame_size, True)
+            for ([x, y, w, h], logit) in zip(output_boxes, output_logits):
+                ret, frame = cap.read()
+                if frame is None:
+                    break
+                cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                cv.putText(frame, "{:.1f}".format(logit), (int(x+w/2-10), y-10), cv.FONT_HERSHEY_SIMPLEX ,1,(0,0,255), 2)
+                video_writer.write(frame)
+            cap.release()
+            video_writer.release()
+            # save boudingbox
             tracked_bb = np.array(output_boxes).astype(int)
             bbox_file = '{}.txt'.format(base_results_path)
             np.savetxt(bbox_file, tracked_bb, delimiter='\t', fmt='%d')
