@@ -314,7 +314,7 @@ class MixFormer(nn.Module):
         self.head_type = head_type
         self.score_head = score_head
 
-    def forward(self, template, online_template, search, softmax, run_score_head=True, gt_bboxes=None):
+    def forward(self, template, online_template, search, softmax=True, run_score_head=True, gt_bboxes=None):
         # search: (b, c, h, w)
         if template.dim() == 5:
             template = template.squeeze(0)
