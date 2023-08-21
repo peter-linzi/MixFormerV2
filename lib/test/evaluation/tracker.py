@@ -288,8 +288,8 @@ class Tracker:
                 ret, frame = cap.read()
                 if frame is None:
                     break
-                cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-                cv.putText(frame, "{:.1f}".format(logit), (int(x+w/2-10), y-10), cv.FONT_HERSHEY_SIMPLEX ,1,(0,0,255), 2)
+                cv.rectangle(frame, (int(x), int(y)), (int(x+w), int(y+h)), (0, 255, 0), 2)
+                cv.putText(frame, "{:.1f}".format(logit), (int(x+w/2-10), int(y-10)), cv.FONT_HERSHEY_SIMPLEX ,1,(0,0,255), 2)
                 video_writer.write(frame)
             cap.release()
             video_writer.release()
