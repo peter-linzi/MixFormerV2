@@ -61,6 +61,8 @@ if __name__ == "__main__":
     elif args.script == "mixformer2_vit_online":
         model_constructor = model_module.build_mixformer2_vit_online
     model = model_constructor(param.cfg, train=False)
+    model.load_state_dict(torch.load(param.checkpoint, map_location='cpu')['net'], strict=True)
+    print(f"Load checkpoint {param.checkpoint} successfully!")
 
     # get the template and search
     template, online_template, search = get_data(bs, t_sz, s_sz)
@@ -72,7 +74,7 @@ if __name__ == "__main__":
 
     # export onnx model
     input_names=['template', 'online_template', 'search']
-    output_names=['pred_boxes', 'prob_l', 'prob_t', 'prob_b', 'prob_r', 'pred_scores', 'reg_tokens']
+    output_names=['pred_boxes', 'prob_l', 'prob_t', 'prob_r', 'prob_b', 'pred_scores', 'reg_tokens']
     for i in range(param.cfg.MODEL.BACKBONE.DEPTH):
         output_names.append("distill_feat_list_{}".format(i))
     torch.onnx.export(model, (template, online_template, search), args.onnx_path, opset_version=11, input_names=input_names, output_names=output_names)
