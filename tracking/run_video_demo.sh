@@ -1,14 +1,15 @@
 # We only support manually setting the bounding box of first frame and save the results in debug directory.
+# We only support manually setting the bounding box of first frame and save the results in debug directory.
 
-##########-------------- MixFormer-22k-----------------##########
-# python tracking/video_demo.py mixformer_online baseline /YOUR/VIDEO/PATH  \
-#    --optional_box [YOURS_X] [YOURS_Y] [YOURS_W] [YOURS_H] --params__model mixformer_online_22k.pth.tar --debug 1 \
-#   --params__search_area_scale 4.5 --params__update_interval 25 --params__online_sizes 3
+##########-------------- MixFormerV2-Base-----------------##########
+# python tracking/video_demo.py \
+#   mixformer2_vit_online \
+#   288_depth8_score \
+#   xxx.mp4  \
+#   --optional_box [YOUR_X] [YOUR_Y] [YOUR_W] [YOUR_H] \ 
+#   --params__model models/mixformerv2_base.pth.tar --debug 1 \
+#   --params__search_area_scale 4.5 --params__update_interval 25 --params__online_size 1
 
-##########-------------- MixFormerL-22k-----------------##########
-#python tracking/video_demo.py mixformer_online baseline /home/cyt/project/MixFormer/test.mp4  \
-#   --optional_box 408 240 94 254 --params__model mixformerL_online_22k.pth.tar --debug 1 \
-#  --params__search_area_scale 4.5 --params__update_interval 25 --params__online_sizes 3
 
 #   /mnt/sda1/videos/compare/infrared/20230215/MOV_20230215_171959960_tracking_0.mp4  \
 #   /mnt/sda1/videos/case_seq_bak/105.mp4 \
