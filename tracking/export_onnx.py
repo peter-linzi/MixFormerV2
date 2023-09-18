@@ -77,5 +77,5 @@ if __name__ == "__main__":
     output_names=['pred_boxes', 'prob_l', 'prob_t', 'prob_r', 'prob_b', 'pred_scores', 'reg_tokens']
     for i in range(param.cfg.MODEL.BACKBONE.DEPTH):
         output_names.append("distill_feat_list_{}".format(i))
-    torch.onnx.export(model, (template, online_template, search), args.onnx_path, opset_version=11, input_names=input_names, output_names=output_names)
+    torch.onnx.export(model, (template, online_template, search), args.onnx_path, opset_version=9, input_names=input_names, output_names=output_names)
 
