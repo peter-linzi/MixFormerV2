@@ -2,11 +2,19 @@
 
 ### UAV test and evaluation
 python tracking/test.py mixformer2_vit_online 288_depth8_score \
- --dataset uav --threads 2 --num_gpus 1 \
+ --dataset webuav3m_test --threads 2 --num_gpus 1 \
  --params__model models/mixformerv2_base.pth.tar \
  --params__search_area_scale 5.0 \
  --params__online_size 1 \
  --debug 0
+
+# ### UAV test and evaluation
+# python tracking/test.py mixformer2_vit_online 288_depth8_score \
+#  --dataset uav --threads 2 --num_gpus 1 \
+#  --params__model models/mixformerv2_base.pth.tar \
+#  --params__search_area_scale 5.0 \
+#  --params__online_size 1 \
+#  --debug 0
 
 # ### LaSOT test and evaluation
 # python tracking/test.py mixformer2_vit_online 288_depth8_score \
