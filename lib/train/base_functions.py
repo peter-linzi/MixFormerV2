@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data.distributed import DistributedSampler
 # datasets related
-from lib.train.dataset import Lasot, Got10k, MSCOCOSeq, ImagenetVID, TrackingNet
+from lib.train.dataset import Lasot, Got10k, MSCOCOSeq, ImagenetVID, TrackingNet, WebUAV3M
 from lib.train.dataset import Lasot_lmdb, Got10k_lmdb, MSCOCOSeq_lmdb, ImagenetVID_lmdb, TrackingNet_lmdb
 from lib.train.data import sampler, opencv_loader, processing, LTRLoader
 import lib.train.data.transforms as tfm
@@ -28,7 +28,7 @@ def names2datasets(name_list: list, settings, image_loader):
     assert isinstance(name_list, list)
     datasets = []
     for name in name_list:
-        assert name in ["LASOT", "GOT10K_vottrain", "GOT10K_votval", "GOT10K_train_full", "COCO17", "VID", "TRACKINGNET"]
+        assert name in ["LASOT", "GOT10K_vottrain", "GOT10K_votval", "GOT10K_train_full", "COCO17", "VID", "TRACKINGNET", "WebUAV3M_train", "WebUAV3M_val"]
         if name == "LASOT":
             if settings.use_lmdb:
                 print("Building lasot dataset from lmdb")
@@ -72,6 +72,22 @@ def names2datasets(name_list: list, settings, image_loader):
             else:
                 # raise ValueError("NOW WE CAN ONLY USE TRACKINGNET FROM LMDB")
                 datasets.append(TrackingNet(settings.env.trackingnet_dir, image_loader=image_loader))
+        if name == "WebUAV3M_train":
+            if settings.use_lmdb:
+                print("Building WebUAV3M from lmdb")
+                # datasets.append(TrackingNet_lmdb(settings.env.trackingnet_lmdb_dir, image_loader=image_loader))
+            else:
+                # raise ValueError("NOW WE CAN ONLY USE TRACKINGNET FROM LMDB")
+                datasets.append(WebUAV3M(settings.env.webuav3m_dir, split="train", image_loader=image_loader))
+        if name == "WebUAV3M_val":
+            if settings.use_lmdb:
+                print("Building WebUAV3M from lmdb")
+                # datasets.append(TrackingNet_lmdb(settings.env.trackingnet_lmdb_dir, image_loader=image_loader))
+            else:
+                # raise ValueError("NOW WE CAN ONLY USE TRACKINGNET FROM LMDB")
+                datasets.append(WebUAV3M(settings.env.webuav3m_dir, split="val", image_loader=image_loader))
+                
+
     return datasets
 
 

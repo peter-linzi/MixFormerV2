@@ -74,7 +74,7 @@ class EnvSettings_ITP:
         self.trackingnet_path = os.path.join(data_dir, 'trackingNet')
         self.davis_dir = ''
         self.youtubevos_dir = ''
-        self.webuav3m_path = os.path.join(data_dir, 'WebUAV-3M')
+        self.webuav3m_path = os.path.join(data_dir, 'webuav3m')
 
         self.got_packed_results_path = ''
         self.got_reports_path = ''
